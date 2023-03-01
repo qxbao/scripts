@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Why Hello?
 // @namespace    http://tampermonkey.net/
-// @version      1
+// @version      1.1
 // @description  Skip all Hello assessments
 // @author       Orca
 // @match        https://hello.hanu.edu.vn/web/mod/*
@@ -27,7 +27,7 @@
 	}else if ($('#next-activity-link').length) {
 		$('#next-activity-link').get(0).click();
 	}else {
-		document.title = "!!!!!!!!!!!!!!"
+		document.title = "!!!!!!!!!!!!!!";
 	}
     }, 5000)
 })
