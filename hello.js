@@ -1,14 +1,15 @@
 // ==UserScript==
-// @name         LiveAgent - Clickafy URLs
+// @name         Why Hello?
 // @namespace    http://tampermonkey.net/
-// @version      2.0
-// @description  Make the Central and Jira issue tracker IDs, the user ID, the user's website, and the sandbox site URL clickable in LiveAgent
-// @author       Andras Guseo
-// @include      https://support.theeventscalendar.com/agent/*
-// @include      https://theeventscalendar.ladesk.com/agent/*
-// @downloadURL  https://github.com/moderntribe/tampermonkey-scripts/raw/master/liveagent/liveagent-clickafy-urls.user.js
+// @version      0.1
+// @description  Skip all Hello assessments
+// @author       Orca
+// @match        https://hello.hanu.edu.vn/web/mod/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=hello.hanu.edu.vn
+// @require      https://code.jquery.com/jquery-3.6.3.min.js
 // @grant        none
 // ==/UserScript==
+
 (function() {
     'use strict';
 
