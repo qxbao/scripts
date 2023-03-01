@@ -24,9 +24,11 @@
         }else if($('.controls').eq(1).find('button').length || $('.quizstartbuttondiv form button').length){
 			$('.quizstartbuttondiv form button').click();
 			$('.controls').eq(1).find('button').click();
-		}else if ($('#next-activity-link').length) {
-			$('#next-activity-link').get(0).click();
-		}
-    },5000)
+	}else if ($('#next-activity-link').length) {
+		$('#next-activity-link').get(0).click();
+	}else {
+		document.title = "!!!!!!!!!!!!!!"
+	}
+    }, 5000)
 })
 })();
