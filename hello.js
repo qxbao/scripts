@@ -15,17 +15,17 @@
 
     // Your code here...
     $(document).ready(() => {
-    setInterval(() => {
-        if($("#mod_quiz-next-nav").length) {
-            $("#mod_quiz-next-nav").click();
-        }else if($('input[value="Submit all and finish"]').length){
-            $('input[value="Submit all and finish"]').click();
-        }else if($('.controls').eq(1).find('button').length){
+	setInterval(() => {
+		if($("#mod_quiz-next-nav").length) {
+		    $("#mod_quiz-next-nav").click();
+		}else if($('input[value="Submit all and finish"]').length){
+		    $('input[value="Submit all and finish"]').click();
+		}else if($('.controls').eq(1).find('button').length){
 			$('.quizstartbuttondiv form button').click();
 			$('.controls').eq(1).find('button').click();
 		}else if ($('#next-activity-link').length) {
 			$('#next-activity-link').get(0).click();
 		}
-    }, 5000)
-})
+	    }, 5000)
+	})
 })();
