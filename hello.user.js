@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Why Hello?
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Skip all Hello assessments
 // @author       Orca
 // @match        https://hello.hanu.edu.vn/web/mod/*
@@ -15,20 +15,28 @@
     'use strict';
 
     // Your code here...
+    let x = 0;
+    let time = 2500;
    $(document).ready(() => {
-    setInterval(() => {  
-        if($("#mod_quiz-next-nav").length) {
-            $("#mod_quiz-next-nav").click();
-        }else if($('input[value="Submit all and finish"]').length){
-            $('input[value="Submit all and finish"]').click();
-        }else if($('.controls').eq(1).find('button').length || $('.quizstartbuttondiv form button').length){
-			$('.quizstartbuttondiv form button').click();
-			$('.controls').eq(1).find('button').click();
-	}else if ($('#next-activity-link').length) {
-		$('#next-activity-link').get(0).click();
-	}else {
-		document.title = "!!!!!!!!!!!!!!";
-	}
-    }, 5000)
+    setInterval(() => {
+        x++;
+        if (x <= 3) {
+            if($("#mod_quiz-next-nav").length) {
+                $("#mod_quiz-next-nav").click();
+            }else if($('input[value="Submit all and finish"]').length){
+                $('input[value="Submit all and finish"]').click();
+            }else if($('.controls').eq(1).find('button').length || $('.quizstartbuttondiv form button').length){
+                $('.quizstartbuttondiv form button').click();
+                $('.controls').eq(1).find('button').click();
+            }else if ($('#next-activity-link').length) {
+                $('#next-activity-link').get(0).click();
+            }else {
+                document.title = "!!!!!!!!!!!!!!";
+            }
+        }
+    }, time)
 })
+// Changelog:
+// 1.1: Fix some minor bugs
+// 1.2: Click limit to 3 to avoid crash and add cycle-controller
 })();
