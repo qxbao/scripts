@@ -13,6 +13,6 @@
 
 (function() {
     'use strict';
-    alert("Your WhyHello script is out of date. Please uninstall it.");
+    alert("Your WhyHello script is no longer supported. Please uninstall it.");
 })
 })();
