@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Why Hello?
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  Skip all Hello assessments
 // @author       Orca
 // @match        https://hello.hanu.edu.vn/web/mod/*
@@ -41,4 +41,5 @@
 // 1.1: Fix some minor bugs
 // 1.2: Click limit to 3 to avoid crash and add cycle-controller
 // 1.3: WhyHello turn into a private tool
+// 1.4: Add new C1 event
 })();
