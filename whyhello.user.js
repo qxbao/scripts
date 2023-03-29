@@ -30,6 +30,8 @@
             $('.controls').eq(1).find('button').click();
         }else if ($('#next-activity-link').length) {
             $('#next-activity-link').get(0).click();
+        }else if ($('input[value="Add submission"]').length){
+            $('input[value="Submit all and finish"]').click();
         }else {
             document.title = "!!!!!!!!!!!!!!";
         }
