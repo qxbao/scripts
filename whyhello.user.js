@@ -21,8 +21,8 @@
     let cycle = setInterval(() => {
         counter++;
         if (counter > 3) clearInterval(cycle);
-        if ($('input[value="Start attemp"]').length){
-            $('input[value="Start attemp"]').click();
+        if ($('input[value="Start attempt"]').length){
+            $('input[value="Start attempt"]').click();
         }else if($("#mod_quiz-next-nav").length) {
             $("#mod_quiz-next-nav").click();
         }else if($('input[value="Submit all and finish"]').length){
