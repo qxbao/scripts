@@ -37,6 +37,8 @@
         }
     }
     
+    func();
+    
     $(document).ready(() => {
     let cycle = setInterval(() => {
         counter++;
