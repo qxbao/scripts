@@ -42,7 +42,7 @@
     $(document).ready(() => {
     let cycle = setInterval(() => {
         counter++;
-        if (counter > 3) {
+        if (counter > 2) {
             clearInterval(cycle);
             return;
         }
