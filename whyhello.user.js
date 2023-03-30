@@ -20,7 +20,10 @@
     $(document).ready(() => {
     let cycle = setInterval(() => {
         counter++;
-        if (counter > 3) clearInterval(cycle);
+        if (counter > 3) {
+            clearInterval(cycle);
+            return;
+        }
         if ($('input[value="Start attempt"]').length){
             $('input[value="Start attempt"]').click();
         }else if($("#mod_quiz-next-nav").length) {
