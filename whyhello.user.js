@@ -17,13 +17,8 @@
     // Your code here...
     let counter = 0;
     let time = 2500;
-    $(document).ready(() => {
-    let cycle = setInterval(() => {
-        counter++;
-        if (counter > 3) {
-            clearInterval(cycle);
-            return;
-        }
+    
+    const func = () => {
         if ($('input[value="Start attempt"]').length){
             $('input[value="Start attempt"]').click();
         }else if($("#mod_quiz-next-nav").length) {
@@ -40,6 +35,16 @@
         }else {
             document.title = "!!!!!!!!!!!!!!";
         }
+    }
+    
+    $(document).ready(() => {
+    let cycle = setInterval(() => {
+        counter++;
+        if (counter > 3) {
+            clearInterval(cycle);
+            return;
+        }
+        func();
     }, time)
 })
 // Changelog:
