@@ -21,7 +21,10 @@
     const func = () => {
         if ($('input[value="Start attempt"]').length){
             $('input[value="Start attempt"]').click();
-        }else if($("#mod_quiz-next-nav").length) {
+        }else if($('input[value="Continue"]').length){
+            $('input[value="Continue"]').click();
+        }
+        else if($("#mod_quiz-next-nav").length) {
             $("#mod_quiz-next-nav").click();
         }else if($('input[value="Submit all and finish"]').length){
             $('input[value="Submit all and finish"]').click();
