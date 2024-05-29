@@ -14,7 +14,7 @@
 
 (function() {
     'use strict';
-    const miners = [24714, 24713];
+    const miners = [];
     const clicking = () => {
         for (const miner of miners) {
             $("#buttonMine" + miner).click();
@@ -22,8 +22,14 @@
     }
     const gap = 20000;
     $(document).ready(() => {
+        const minersText = $(".detail div strong");
+        for (const minerText of minersText) {
+            miners.push(minerText.textContent.split("#")[1].trim());
+        }
+        console.log(miners);
         const cycle = setInterval(() => {
             clicking();
         }, gap);
     })
 })();
+
