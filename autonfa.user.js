@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Click click click
 // @author       Orca
 // @match        https://onfa.io/ecosystem/*
@@ -14,22 +14,23 @@
 
 (function() {
     'use strict';
-    
-    const clicking = () => {
+    const clicking = (miners) => {
         for (const miner of miners) {
             $("#buttonMine" + miner).click();
         }
     }
-    const gap = 20000;
+    const gap = 5000;
     $(document).ready(() => {
-        const miners = [];
-        const minersText = $(".detail div strong");
-        for (const minerText of minersText) {
-            miners.push(minerText.textContent.split("#")[1].trim());
-        }
-        console.log(miners);
         const cycle = setInterval(() => {
-            clicking();
+            const miners = [];
+            const minersText = $(".detail div strong");
+            for (const minerText of minersText) {
+                miners.push(minerText.textContent.split("#")[1].trim());
+            }
+            console.log(miners);
+            if (miners.length != 0) {
+                clicking(miners);
+            }
         }, gap);
     })
 })();
