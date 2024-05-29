@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Click click click
 // @author       Orca
 // @match        https://onfa.io/ecosystem/*
@@ -14,10 +14,27 @@
 
 (function() {
     'use strict';
-    const clicking = (miners) => {
+    const clickMiners = (miners, counter) => {
+        console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter})`);
+        if (counter % 10 == 0) {
+            console.log("AUTOnfa debugger: Reloading miners");
+            $("#reloadListing").click();
+        }
         for (const miner of miners) {
+            console.log($("#buttonMine" + miner).length == 0 ? `>> #${miner} not available` : `>> #${miner} done`);
             $("#buttonMine" + miner).click();
         }
+        return counter + 1;
+    }
+    const clickAirdrops = (counter) => {
+        console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter})`);
+        if ($("#claimnow").prop("disabled"))
+            console.log("AUTOnfa debugger: Airdrop not available.");
+        else {
+            $("#claimnow").click();
+            console.log("AUTOnfa debugger: Airdrop looted.");
+        }
+        return counter + 1;
     }
     const resting = 5000;
     let counter = 1;
@@ -27,25 +44,33 @@
         const miners = [];
         const initPromise = new Promise((res) => {
             const initerval = setInterval(() => {
-                console.log("AUTOnfa debugger: Looking for miners data...");
-                const minersText = $(".detail div strong");
-                for (const minerText of minersText) {
-                    miners.push(minerText.textContent.split("#")[1].trim());
-                }
-                if (miners.length > 0) {
+                if ($(".pageTitle")[0].textContent.trim() == "Airdrops") {
                     console.log("AUTOnfa debugger: Init successfully.");
                     clearInterval(initerval);
-                    res();
+                    res("Airdrops");
                 } else {
-                    console.log("AUTOnfa debugger: Init failed.");
+                    console.log("AUTOnfa debugger: Looking for miners data...");
+                    const minersText = $(".detail div strong");
+                    for (const minerText of minersText) {
+                        miners.push(minerText.textContent.split("#")[1].trim());
+                    }
+                    if (miners.length > 0) {
+                        console.log("AUTOnfa debugger: Init successfully.");
+                        clearInterval(initerval);
+                        res("Mining");
+                    } else {
+                        console.log("AUTOnfa debugger: Init failed.");
+                    }
                 }
             }, 1000);
         })
-        await initPromise;
-        console.log("AUTOnfa debugger: Miners(" + miners.length +") = " + miners.map(e => "#" + e).join(" "));
+        const mode = await initPromise;
+        mode == "Mining" ? console.log("AUTOnfa debugger: Miners(" + miners.length +") = " + miners.map(e => "#" + e).join(" ")) : null;
         const cycle = setInterval(() => {
-            console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter++})`);
-            clicking(miners);
+            if (mode == "Mining")
+                counter = clickMiners(miners, counter);
+            else
+                counter = clickAirdrops(counter);
         }, resting);
     })
 })();
