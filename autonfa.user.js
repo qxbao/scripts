@@ -16,7 +16,7 @@
     'use strict';
     const clickMiners = (miners, counter) => {
         console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter})`);
-        if (counter % 10 == 0) {
+        if (counter % 5 == 0) {
             console.log("AUTOnfa debugger: Reloading miners");
             $("#reloadListing")[0].click();
         }
