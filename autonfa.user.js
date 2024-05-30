@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  Click click click
 // @author       Orca
 // @match        https://onfa.io/ecosystem/*
@@ -18,7 +18,7 @@
         console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter})`);
         if (counter % 10 == 0) {
             console.log("AUTOnfa debugger: Reloading miners");
-            $("#reloadListing").click();
+            $("#reloadListing")[0].click();
         }
         for (const miner of miners) {
             console.log($("#buttonMine" + miner).length == 0 ? `>> #${miner} not available` : `>> #${miner} done`);
