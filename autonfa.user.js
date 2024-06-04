@@ -9,6 +9,7 @@
 // @require      https://raw.githubusercontent.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
 // @downloadURL  https://raw.githubusercontent.com/qxbao/scripts/main/autonfa.user.js
+// @updateURL    https://raw.githubusercontent.com/qxbao/scripts/main/autonfa.user.js
 // @grant        none
 // ==/UserScript==
 
