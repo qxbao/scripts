@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.3.2
-// @description  Click click click
+// @version      1.4
+// @description  Automation for Onfa.io
 // @author       Orca
 // @match        https://onfa.io/ecosystem/*
 // @require      https://code.jquery.com/jquery-3.6.3.min.js
@@ -75,5 +75,16 @@
             else
                 counter = clickAirdrops(counter);
         }, resting);
+        const pathName = window.location.pathname.split("/")[2];
+        const pageChanger = setTimeout(() => {
+            if (pathName.toLowerCase() == "airdrops")
+                window.location.pathname = "/ecosystem/mining";
+            else
+                window.location.pathname = "/ecosystem/airdrops"
+        }, 30000);
+        $(document).bind('keydown', 'ctrl+y', () => {
+            clearTimeout(pageChanger);
+            alert("Page Auto Changing: Off")
+        });
     })
 })();
