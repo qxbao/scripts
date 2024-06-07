@@ -34,9 +34,6 @@
         else {
             $("#claimnow").click();
             console.log("AUTOnfa debugger: Airdrop looted.");
-            setTimeout(() => {
-                location.reload();
-            }, 10000);
         }
         return counter + 1;
     }
