@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Automation for Onfa.io
 // @author       Orca
-// @match        https://onfa.io/ecosystem/*
-// @require      https://code.jquery.com/jquery-3.6.3.min.js
+// @match        https://onfa.io/ecosystem/mining
+// @match        https://onfa.io/ecosystem/airdrops
+// @require      https://onfa.io/assets/js/jquery-1.11.3.min.js
+// @require      https://onfa.io/assets/datatable/js/jquery.dataTables.min.js
 // @require      https://raw.githubusercontent.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
 // @downloadURL  https://raw.githubusercontent.com/qxbao/scripts/main/autonfa.user.js
@@ -61,6 +63,7 @@
                         res("Mining");
                     } else {
                         console.log("AUTOnfa debugger: Init failed.");
+                        $("#reloadListing")[0].click();
                     }
                 }
             }, 1000);
