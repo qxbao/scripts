@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.5.1
 // @description  Automation for Onfa.io
 // @author       Orca
 // @match        https://onfa.io/ecosystem/mining
@@ -44,6 +44,9 @@
     $(document).ready(async () => {
         console.log("AUTOnfa debugger: Start.");
         console.log("AUTOnfa debugger: Initializing...");
+        setTimeout(() => {
+            location.reload();
+        }, 60000);
         const miners = [];
         const initPromise = new Promise((res) => {
             const initerval = setInterval(() => {
