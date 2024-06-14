@@ -6,8 +6,8 @@
 // @author       Orca
 // @match        https://onfa.io/ecosystem/mining
 // @match        https://onfa.io/ecosystem/airdrops
-// @require      https://onfa.io/assets/js/jquery-1.11.3.min.js
-// @require      https://onfa.io/assets/datatable/js/jquery.dataTables.min.js
+// @require      https://code.jquery.com/jquery-3.7.1.min.js
+// @require      https://cdn.datatables.net/2.0.8/js/dataTables.min.js
 // @require      https://raw.githubusercontent.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
 // @downloadURL  https://raw.githubusercontent.com/qxbao/scripts/main/autonfa.user.js
