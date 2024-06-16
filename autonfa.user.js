@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
+// @version      1.6
 // @description  Automation for Onfa.io
 // @author       Orca
 // @match        https://onfa.io/ecosystem/mining
@@ -29,63 +29,52 @@
         }
         return counter + 1;
     }
-    const clickAirdrops = (counter) => {
-        console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter})`);
-        if ($("#claimnow").prop("disabled"))
-            console.log("AUTOnfa debugger: Airdrop not available.");
-        else {
-            $("#claimnow").click();
-            console.log("AUTOnfa debugger: Airdrop looted.");
-        }
-        return counter + 1;
+    const dprint = (msg) => {
+        console.log("AUTOnfa Debugger >> " + msg);
     }
     const resting = 5000;
     let counter = 1;
     $(document).ready(async () => {
-        console.log("AUTOnfa debugger: Start.");
-        console.log("AUTOnfa debugger: Initializing...");
-        setTimeout(() => {
-            location.reload();
-        }, 60000);
+        dprint("Started")
+        dprint("Initializing...");
         const miners = [];
         const initPromise = new Promise((res) => {
             const initerval = setInterval(() => {
-                if ($(".pageTitle")[0].textContent.trim() == "Airdrops") {
-                    console.log("AUTOnfa debugger: Init successfully.");
+                dprint("Looking for miners data...");
+                const minersText = $(".detail div strong");
+                for (const minerText of minersText) {
+                    miners.push(minerText.textContent.split("#")[1].trim());
+                }
+                if (miners.length > 0) {
+                    dprint("Init successfully.");
                     clearInterval(initerval);
-                    res("Airdrops");
+                    res();
                 } else {
-                    console.log("AUTOnfa debugger: Looking for miners data...");
-                    const minersText = $(".detail div strong");
-                    for (const minerText of minersText) {
-                        miners.push(minerText.textContent.split("#")[1].trim());
-                    }
-                    if (miners.length > 0) {
-                        console.log("AUTOnfa debugger: Init successfully.");
-                        clearInterval(initerval);
-                        res("Mining");
-                    } else {
-                        console.log("AUTOnfa debugger: Init failed.");
-                        $("#reloadListing")[0].click();
-                    }
+                    dprint("Init failed.");
+                    $("#reloadListing")[0].click();
                 }
             }, 1000);
         })
-        const mode = await initPromise;
-        mode == "Mining" ? console.log("AUTOnfa debugger: Miners(" + miners.length +") = " + miners.map(e => "#" + e).join(" ")) : null;
+        await initPromise;
+        dprint("Miners(" + miners.length +") = " + miners.map(e => "#" + e).join(" "));
         const cycle = setInterval(() => {
-            if (mode == "Mining")
-                counter = clickMiners(miners, counter);
-            else
-                counter = clickAirdrops(counter);
+            counter = clickMiners(miners, counter);
+            if (counter % 3 == 0) {
+                $.post("/ecosystem/airdrops_claim", {id : token}, (data) => {
+                    if (data.status == false && "login" in data)
+                        dprint("Something wrong happened in claiming airdrop process.");
+                    else if (data.status == false)
+                        dprint("Airdrop not available.");
+                    else
+                        dprint("Airdrop looted")
+                }, "json");
+            }
         }, resting);
         const pathName = window.location.pathname.split("/")[2];
         const pageChanger = setTimeout(() => {
             if (pathName.toLowerCase() == "airdrops")
                 window.location.pathname = "/ecosystem/mining";
-            else
-                window.location.pathname = "/ecosystem/airdrops"
-        }, 30000);
+        }, 15000);
         $(document).bind('keydown', 'ctrl+y', () => {
             clearTimeout(pageChanger);
             alert("Page Auto Changing: Off")
