@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.7.1
+// @version      1.8
 // @description  Automation for Onfa.io
 // @author       Orca
 // @match        https://onfa.io/*
@@ -13,22 +13,24 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
 // @downloadURL  https://raw.githubusercontent.com/qxbao/scripts/main/autonfa.user.js
 // @updateURL    https://raw.githubusercontent.com/qxbao/scripts/main/autonfa.user.js
-// @grant        none
+// @grant        GM_setValue
+// @grant        GM_getValue
 // ==/UserScript==
 
-(function() {
+(async function() {
     'use strict';
      // Các miners đang hoạt động
-    const minersID = [24714, 24713];
+    let minersID = await GM_getValue("miners", null);
     // UserID
-    const uid = 1990;
+    const userid = await GM_getValue("uid", null);
+    // Debugging printing
     const dprint = (msg) => {
         console.log("AUTOnfa Debugger >> " + msg);
     }
     const resting = 10000;
     let counter = 1;
     const mine = (id) => {
-        $.post("/ecosystem/mining_start", {id : id, uid : uid, token : token}, (data) => {
+        $.post("/ecosystem/mining_start", {id : id, uid : userid, token : token}, (data) => {
             if (data.status)
                 dprint("Miner #" + id + " claimed!!!");
             else
@@ -45,11 +47,30 @@
                 dprint("Airdrop looted");
         }, "json");
     }
+    $(document).bind('keydown', 'ctrl+y', () => {
+        const miners = [];
+        const minersText = $(".detail div strong");
+        for (const minerText of minersText) {
+            miners.push(parseInt(minerText.textContent.split("#")[1].trim()));
+        }
+        GM_setValue("miners", miners.join(" "));
+        GM_setValue("uid", uid);
+        alert(`Data saved:\nUID: ${uid}\nMiners: ${miners.join(" ")}`);
+    });
     $(document).ready(async () => {
         dprint("Started")
         dprint("Initializing...");
         dprint("Token: " + token);
-        dprint("UID: " + uid);
+        if (userid == null) {
+            noti_error("UID is missing");
+            return dprint("UID is missing");
+        }
+        dprint("UID: " + userid);
+        if (minersID == null) {
+            noti_error("Miners are missing");
+            return dprint("Miners are missing");
+        }
+        minersID = minersID.trim().split(" ").map(e => parseInt(e));
         dprint("Miners: " + minersID);
         const cycle = setInterval(() => {
             dprint("ATTEMPT " + counter + " ---------------------------");
@@ -60,14 +81,5 @@
                 location.reload();
             counter++;
         }, resting);
-        $(document).bind('keydown', 'ctrl+y', () => {
-            const miners = [];
-            const minersText = $(".detail div strong");
-            for (const minerText of minersText) {
-                miners.push(parseInt(minerText.textContent.split("#")[1].trim()));
-            }
-            navigator.clipboard.writeText("[" + miners + "]");
-            alert("Miner value copied. Please assign it to const minersI\nUID: "+uid);
-        });
-    })
+    });
 })();
