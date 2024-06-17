@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @description  Automation for Onfa.io
 // @author       Orca
-// @match        https://onfa.io/ecosystem/mining
-// @match        https://onfa.io/ecosystem/airdrops
+// @match        https://onfa.io/*
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://cdn.datatables.net/2.0.8/js/dataTables.min.js
+// @require      https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js
+// @require      https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/js/bootstrap-select.js
 // @require      https://raw.githubusercontent.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
 // @downloadURL  https://raw.githubusercontent.com/qxbao/scripts/main/autonfa.user.js
@@ -17,67 +18,56 @@
 
 (function() {
     'use strict';
-    const clickMiners = (miners, counter) => {
-        console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter})`);
-        if (counter % 10 == 0) {
-            console.log("AUTOnfa debugger: Reloading miners");
-            $("#reloadListing")[0].click();
-        }
-        for (const miner of miners) {
-            console.log($("#buttonMine" + miner).length == 0 ? `>> #${miner} not available` : `>> #${miner} done`);
-            $("#buttonMine" + miner).click();
-        }
-        return counter + 1;
-    }
+     // Các miners đang hoạt động
+    const minersID = [24714, 24713];
+    // UserID
+    const uid = 1990;
     const dprint = (msg) => {
         console.log("AUTOnfa Debugger >> " + msg);
     }
-    const resting = 5000;
+    const resting = 10000;
     let counter = 1;
+    const mine = (id) => {
+        $.post("/ecosystem/mining_start", {id : id, uid : uid, token : token}, (data) => {
+            if (data.status)
+                dprint("Miner #" + id + " claimed!!!");
+            else
+                dprint("Miner #" + id + " are not ready to be claimed.");
+        }, "json");
+    }
+    const claimAirdrop = (counter) => {
+        $.post("/ecosystem/airdrops_claim", {id : token}, (data) => {
+            if (data.status == false && "login" in data)
+                dprint("Something wrong happened in claiming airdrop process.");
+            else if (data.status == false)
+                dprint("Airdrop not available.");
+            else
+                dprint("Airdrop looted");
+        }, "json");
+    }
     $(document).ready(async () => {
         dprint("Started")
         dprint("Initializing...");
-        const miners = [];
-        const initPromise = new Promise((res) => {
-            const initerval = setInterval(() => {
-                dprint("Looking for miners data...");
-                const minersText = $(".detail div strong");
-                for (const minerText of minersText) {
-                    miners.push(minerText.textContent.split("#")[1].trim());
-                }
-                if (miners.length > 0) {
-                    dprint("Init successfully.");
-                    clearInterval(initerval);
-                    res();
-                } else {
-                    dprint("Init failed.");
-                    $("#reloadListing")[0].click();
-                }
-            }, 1000);
-        })
-        await initPromise;
-        dprint("Miners(" + miners.length +") = " + miners.map(e => "#" + e).join(" "));
+        dprint("Token: " + token);
+        dprint("UID: " + uid);
+        dprint("Miners: " + minersID);
         const cycle = setInterval(() => {
-            counter = clickMiners(miners, counter);
-            if (counter % 3 == 0) {
-                $.post("/ecosystem/airdrops_claim", {id : token}, (data) => {
-                    if (data.status == false && "login" in data)
-                        dprint("Something wrong happened in claiming airdrop process.");
-                    else if (data.status == false)
-                        dprint("Airdrop not available.");
-                    else
-                        dprint("Airdrop looted")
-                }, "json");
-            }
+            dprint("ATTEMPT " + counter + " ---------------------------");
+            minersID.forEach(mine);
+            if (counter % 3 == 0)
+                claimAirdrop(counter);
+            if (counter % 120 == 0)
+                location.reload();
+            counter++;
         }, resting);
-        const pathName = window.location.pathname.split("/")[2];
-        const pageChanger = setTimeout(() => {
-            if (pathName.toLowerCase() == "airdrops")
-                window.location.pathname = "/ecosystem/mining";
-        }, 15000);
         $(document).bind('keydown', 'ctrl+y', () => {
-            clearTimeout(pageChanger);
-            alert("Page Auto Changing: Off")
+            const miners = [];
+            const minersText = $(".detail div strong");
+            for (const minerText of minersText) {
+                miners.push(parseInt(minerText.textContent.split("#")[1].trim()));
+            }
+            navigator.clipboard.writeText("[" + miners + "]");
+            alert("Miner value copied. Please assign it to const minersID")
         });
     })
 })();
