@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AUTOnfa
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.7.1
 // @description  Automation for Onfa.io
 // @author       Orca
 // @match        https://onfa.io/*
@@ -67,7 +67,7 @@
                 miners.push(parseInt(minerText.textContent.split("#")[1].trim()));
             }
             navigator.clipboard.writeText("[" + miners + "]");
-            alert("Miner value copied. Please assign it to const minersID")
+            alert("Miner value copied. Please assign it to const minersI\nUID: "+uid);
         });
     })
 })();
