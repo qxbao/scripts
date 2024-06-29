@@ -55,6 +55,7 @@
         })
         await initPromise;
         dprint("Miners(" + miners.length +") = " + miners.map(e => "#" + e).join(" "));
+        counter = clickMiners(miners, counter);
         const cycle = setInterval(() => {
             counter = clickMiners(miners, counter);
         }, resting);
