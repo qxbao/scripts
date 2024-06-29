@@ -30,7 +30,7 @@
     const dprint = (msg) => {
         console.log("AUTOnfa Debugger >> " + msg);
     }
-    const resting = 1800000;
+    const resting = 1000 * 3600;
     let counter = 1;
     $(document).ready(async () => {
         dprint("Started")
