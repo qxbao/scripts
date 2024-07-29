@@ -19,8 +19,8 @@
             $("#reloadListing")[0].click();
         }
         for (const miner of miners) {
-            console.log($("#buttonMine" + miner).length == 0 ? `>> #${miner} not available` : `>> #${miner} done`);
-            $("#buttonMine" + miner).click();
+            console.log($("#buttonClaim" + miner).length == 0 ? `>> #${miner} not available` : `>> #${miner} done`);
+            $("#buttonClaim" + miner).click();
         }
         return counter + 1;
     }
