@@ -1,64 +1,90 @@
     // ==UserScript==
     // @name         AUTOnfa Stable
     // @namespace    http://tampermonkey.net/
-    // @version      1.6
+    // @version      1.7
     // @description  Automation for Onfa.io
     // @author       Orca
     // @match        https://onfa.io/ecosystem/mining
-    // @require      https://code.jquery.com/jquery-3.7.1.min.js
     // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
     // @grant        none
+    // @run-at       document-end
     // ==/UserScript==
-    
+
     (function() {
-        'use strict';
-        const clickMiners = (miners, counter) => {
-            console.log(`AUTOnfa debugger: Click at ${new Date().toLocaleTimeString()} (${counter})`);
-            if (counter % 10 == 0) {
-                console.log("AUTOnfa debugger: Reloading miners");
-                $("#reloadListing")[0].click();
-            }
-            for (const miner of miners) {
-                if ($("#buttonClaim" + miner).length == 0 && $("#buttonMine" + miner).length == 0)
-                    console.log(`>> #${miner} not available`);
-                else {
-                    console.log(`>> #${miner} done`);
-                    $("#buttonClaim" + miner).click();
-                    $("#buttonMine" + miner).click();
-                }
-            }
-            return counter + 1;
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const click = (element) => {
+            const event = new Event("click", { bubbles: true })
+            element.dispatchEvent(event);
         }
         const dprint = (msg) => {
             console.log("AUTOnfa Debugger >> " + msg);
         }
+        const checkPayouts = async (miners) => {
+            return new Promise((res) => {
+                (async function(){
+                    for (const miner of miners) {
+                        showListPayout((miner).toString(),`Thợ mỏ #${miner}`);
+                        while(document.querySelector("#modalListPayout").querySelector(".show_name_worker") == null) await sleep(100);
+                        while(!document.querySelector("#modalListPayout").querySelector(".show_name_worker").textContent.endsWith(miner)) await sleep(100);
+                        await sleep(3000);
+                        const clickable = document.querySelector("#modalListPayout").querySelectorAll("a");
+                        for (let i = clickable.length - 1; i >= 0; i--) {
+                            click(clickable[i]);
+                            await sleep(1000);
+                        }
+                        while(document.querySelector("#modalListPayout").style.display != "none") {
+                            click(clickable[0]);
+                            await sleep(1000);
+                        }
+                        dprint("Done with #" + miner);
+                    }
+                    res(0);
+                })();
+            })
+        }
+        const clickMiners = (miners, counter) => {
+            dprint(`Click at ${new Date().toLocaleTimeString()}\nAttempt ${counter}`);
+            if (counter % 15 == 0) {
+                dprint("AUTOnfa debugger: Reloading miners");
+                click(document.getElementById("reloadListing"));
+            }
+            for (const miner of miners) {
+                if (document.querySelector("#buttonClaim" + miner) == null && document.querySelector("#buttonMine" + miner) !== null) {
+                    dprint(`>> #${miner} done`);
+                    click(document.querySelector("#buttonClaim" + miner));
+                    click(document.querySelector("#buttonMine" + miner));
+                }
+            }
+            return counter + 1;
+        }
         const resting = 15000;
         let counter = 1;
-        $(document).ready(async () => {
+        window.addEventListener("load", async () => {
             dprint("Started")
             dprint("Initializing...");
             const miners = [];
             const initPromise = new Promise((res) => {
                 const initerval = setInterval(() => {
                     dprint("Looking for miners data...");
-                    const minersText = $(".detail div strong");
-                    for (const minerText of minersText) {
+                    const minersText = document.querySelectorAll(".detail div strong");
+                    for (const minerText of minersText)
                         miners.push(minerText.textContent.split("#")[1].trim());
-                    }
                     if (miners.length > 0) {
                         dprint("Init successfully.");
                         clearInterval(initerval);
-                        res();
+                        res(null);
                     } else {
                         dprint("Init failed.");
-                        $("#reloadListing")[0].click();
+                        click(document.getElementById("reloadListing"));
                     }
-                }, 1000);
+                }, 4000);
             })
             await initPromise;
             dprint("Miners(" + miners.length +") = " + miners.map(e => "#" + e).join(" "));
-            const cycle = setInterval(() => {
+            while (true) {
                 counter = clickMiners(miners, counter);
-            }, resting);
+                if (counter % 10 == 0) await checkPayouts(miners);
+                await sleep(resting);
+            }
         })
     })();
