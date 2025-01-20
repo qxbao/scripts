@@ -1,7 +1,7 @@
     // ==UserScript==
     // @name         AUTOnfa Stable
     // @namespace    http://tampermonkey.net/
-    // @version      1.7.1
+    // @version      1.7.2
     // @description  Automation for Onfa.io
     // @author       Orca
     // @match        https://onfa.io/ecosystem/mining
@@ -14,6 +14,7 @@
         setTimeout(() => location.reload(), 1800000);
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         const click = (element) => {
+            if (element == null) return false;
             const event = new Event("click", { bubbles: true })
             element.dispatchEvent(event);
         }
@@ -37,7 +38,7 @@
                             click(clickable[0]);
                             await sleep(1000);
                         }
-                        dprint("Done with #" + miner);
+                        dprint(`#${miner} scanned!`);
                     }
                     res(0);
                 })();
@@ -50,11 +51,9 @@
                 click(document.getElementById("reloadListing"));
             }
             for (const miner of miners) {
-                if (document.querySelector("#buttonClaim" + miner) == null && document.querySelector("#buttonMine" + miner) !== null) {
-                    dprint(`>> #${miner} done`);
-                    click(document.querySelector("#buttonClaim" + miner));
-                    click(document.querySelector("#buttonMine" + miner));
-                }
+                dprint(`#${miner} done!`);
+                click(document.querySelector("#buttonClaim" + miner));
+                click(document.querySelector("#buttonMine" + miner));
             }
             return counter + 1;
         }
