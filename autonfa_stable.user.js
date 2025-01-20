@@ -1,7 +1,7 @@
     // ==UserScript==
     // @name         AUTOnfa Stable
     // @namespace    http://tampermonkey.net/
-    // @version      1.7
+    // @version      1.7.1
     // @description  Automation for Onfa.io
     // @author       Orca
     // @match        https://onfa.io/ecosystem/mining
@@ -11,6 +11,7 @@
     // ==/UserScript==
 
     (function() {
+        setTimeout(() => location.reload(), 1800000);
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         const click = (element) => {
             const event = new Event("click", { bubbles: true })
