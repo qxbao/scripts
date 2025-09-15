@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OnfaCamper
 // @namespace    http://tampermonkey.net/
-// @version      2025-09-15
+// @version      2025-09-15.1
 // @description  Tự động mua tranh
 // @author       You
 // @match        https://onfa.io/ecosystem/nft
@@ -14,7 +14,7 @@
 
 (async function() {
     'use strict';
-    const delayTime = 2000;
+    const delayTime = 1000;
     const price = 1000;
     let wait = 0;
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -48,5 +48,6 @@
         click(available.querySelector(".bg-nft"));
         while (document.getElementById("modalDetailsNfts").querySelector("button") == null) await sleep(50);
         click(document.getElementById("modalDetailsNfts").querySelector("button"));
+        setTimeout(() => location.reload(), delayTime * 5);
     }
 })();
