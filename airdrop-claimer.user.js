@@ -62,14 +62,12 @@
 
             log("Claiming airdrop");
             click(button);
-
-            setTimeout(() => {
-                log("Reload after claim");
-                location.reload();
-            }, 10000);
-
-            break;
         }
+        
+        setTimeout(() => {
+            log("Reload after claim");
+            location.reload();
+        }, 60000 * 60);
 
         return counter + 1;
     };
