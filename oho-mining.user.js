@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         OHO Mining Claimer
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-31
+// @version      1.0.0
 // @description  Claim OHO Mining
 // @author       You
-// @match        https://onfa.io/oho_mining/*
+// @match        https://onfa.io/oho_mining*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
 // @run-at       document-end
 // @grant        GM_setValue
