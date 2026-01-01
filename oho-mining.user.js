@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         OHO Mining Claimer
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.1.0
 // @description  Claim OHO Mining
 // @author       You
 // @match        https://onfa.io/oho_mining*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=onfa.io
-// @run-at       document-end
+// @run-at       document-start
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        unsafeWindow
 // @updateURL    https://raw.githubusercontent.com/qxbao/scripts/main/oho-mining.user.js
 // @downloadURL  https://raw.githubusercontent.com/qxbao/scripts/main/oho-mining.user.js
 // ==/UserScript==
@@ -18,6 +19,24 @@
 
     const DEBUG = true;
     const TAG = "[OHO]";
+
+    (function forceConfirmYes() {
+        const alwaysTrue = () => true;
+
+        Object.defineProperty(window, 'confirm', {
+            value: alwaysTrue,
+            writable: false,
+            configurable: false
+        });
+
+        if (typeof unsafeWindow !== "undefined") {
+            Object.defineProperty(unsafeWindow, 'confirm', {
+                value: alwaysTrue,
+                writable: false,
+                configurable: false
+            });
+        }
+    })();
 
     function log(...args) {
         if (DEBUG) console.log(TAG, ...args);
@@ -58,8 +77,8 @@
             log("Found claim buttons:", claimButtons.length);
 
             const shouldReset =
-                claimedIds.length === claimButtons.length ||
-                (Date.now() - RESET_INTERVAL_MAX > lastMine);
+                  claimedIds.length === claimButtons.length ||
+                  (Date.now() - RESET_INTERVAL_MAX > lastMine);
 
             if (shouldReset) {
                 log("Reset condition met. Resetting claimedIds.");
@@ -83,11 +102,6 @@
 
         } else if (path.startsWith("/oho_mining/mining_details/")) {
             log("Entering mining_details scope");
-
-            window.confirm = function () {
-                log("Auto-confirm triggered");
-                return true;
-            };
 
             await sleep(5000);
 
