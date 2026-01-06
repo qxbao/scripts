@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OHO Mining Claimer
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.0
 // @description  Claim OHO Mining
 // @author       You
 // @match        https://onfa.io/oho_mining*
@@ -20,24 +20,35 @@
     const DEBUG = true;
     const TAG = "[OHO]";
 
-    (function forceConfirmYes() {
+    (function forceNoPopup() {
         const alwaysTrue = () => true;
-
-        Object.defineProperty(window, 'confirm', {
-            value: alwaysTrue,
-            writable: false,
-            configurable: false
-        });
-
+        const noop = () => {};
+    
+        const override = (obj, name, value) => {
+            try {
+                Object.defineProperty(obj, name, {
+                    value,
+                    writable: false,
+                    configurable: false
+                });
+            } catch (e) {
+                // fallback nếu defineProperty fail
+                obj[name] = value;
+            }
+        };
+    
+        // window context
+        override(window, 'confirm', alwaysTrue);
+        override(window, 'alert', noop);
+        override(window, 'prompt', () => null);
+    
+        // unsafeWindow context (page JS thực sự chạy ở đây)
         if (typeof unsafeWindow !== "undefined") {
-            Object.defineProperty(unsafeWindow, 'confirm', {
-                value: alwaysTrue,
-                writable: false,
-                configurable: false
-            });
+            override(unsafeWindow, 'confirm', alwaysTrue);
+            override(unsafeWindow, 'alert', noop);
+            override(unsafeWindow, 'prompt', () => null);
         }
     })();
-
     function log(...args) {
         if (DEBUG) console.log(TAG, ...args);
     }
