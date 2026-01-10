@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OHO Mining Claimer
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1
+// @version      1.2.2
 // @description  Claim OHO Mining
 // @author       You
 // @match        https://onfa.io/oho_mining*
@@ -20,7 +20,7 @@
     const DEBUG = true;
     const TAG = "[OHO]";
 
-    setTimeout(() => location.reload(), 3600 * 1000 / 2)
+    setTimeout(() => location.reload(), 3600 * 1000 / 2);
     
     (function forceNoPopup() {
         const alwaysTrue = () => true;
