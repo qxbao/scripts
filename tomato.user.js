@@ -13,7 +13,7 @@
     'use strict';
 
     const TARGET_IMG = "https://cdn.qxbao.dev/93828087-2266-4421-9142-2acbde5ba21b.jpg";
-    const SELECTOR = ".profile-img > img, .avatar";
+    const SELECTOR = ".profile-img > img, .avatar, .lb-image";
 
     const style = document.createElement('style');
     style.innerHTML = `
